@@ -67,9 +67,12 @@
         (hasheq 'status 1 'total (hash-ref data 'total)
                 'list
                 (for/list ([item (hash-ref (hash-ref res 'data) 'lists)])
-                  (hash-filter item
-                               (lambda (k _)
-                                 (set-member? *music-result-filter* k))))))
+                  (define singer-name (hash-ref item 'SingerName))
+                  (hash-set
+                   (hash-filter item
+                                (lambda (k _)
+                                  (set-member? *music-result-filter* k)))
+                   'SingerName (cadr (regexp-match #px"<em>(.+?)</em>" singer-name))))))
       (hasheq 'status -1 'msg "internal error, please try again")))
 
 
