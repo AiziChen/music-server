@@ -1,0 +1,20 @@
+#lang racket/base
+
+(require racket/port
+         racket/contract)
+
+(provide (all-defined-out))
+
+(define *appid* "")
+(define *userid* "")
+(define *mid* "")
+(define *dfid* "")
+(define *token* "")
+(define *key* "")
+(define *uuid* "")
+
+(define *tag* "em")
+(define *android-platform* "AndroidFilter")
+(define *clientver* "10259")
+(define *pidversion* "3001")
+(define *pidversion-secrect* "57ae12eb6890223e355ccfcb74edf70d")
