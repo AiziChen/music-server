@@ -62,17 +62,27 @@
      (get "https://gateway.kugou.com/v2/search/song"
           #:params params
           #:headers (request-headers))))
+  
   (if (= (hash-ref res 'status -1) 1)
       (let ([data (hash-ref res 'data)])
         (hasheq 'status 1 'total (hash-ref data 'total)
                 'list
                 (for/list ([item (hash-ref (hash-ref res 'data) 'lists)])
-                  (define singer-name (hash-ref item 'SingerName))
+                  (define singer-name
+                    (string-replace
+                     (string-replace (hash-ref item 'SingerName) "<em>" "")
+                     "</em>" ""))
+                  (define song-name
+                    (string-replace
+                     (string-replace (hash-ref item 'SongName) "<em>" "")
+                     "</em>" ""))
                   (hash-set
-                   (hash-filter item
-                                (lambda (k _)
-                                  (set-member? *music-result-filter* k)))
-                   'SingerName (cadr (regexp-match #px"<em>(.+?)</em>" singer-name))))))
+                   (hash-set
+                    (hash-filter item
+                                 (lambda (k _)
+                                   (set-member? *music-result-filter* k)))
+                    'SingerName singer-name)
+                   'SongName song-name))))
       (hasheq 'status -1 'msg "internal error, please try again")))
 
 
@@ -126,7 +136,7 @@
            file/md5
            "./lyric-api.rkt"
            "./cover-api.rkt")
-  (define keyword "蒋雪璇")
+  (define keyword "热爱")
   (let ([data (music-search keyword 1)])
     (when (= (hash-ref data 'status -1) 1)
       (define song-list (hash-ref data 'list))
