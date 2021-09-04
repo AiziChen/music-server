@@ -32,29 +32,19 @@
   (-> non-empty-string? non-empty-string? integer?
       (listof hash?))
   (define params
-    (let ([tmp
-           `((keyword . ,keyword)
-             (userid . ,*userid*)
-             (ver . "1")
-             (duration . ,(number->string duration))
-             (lrctxt . "1")
-             (client . "mobi")
-             (clientver . ,*clientver*)
-             (man . "no")
-             (appid . ,*appid*)
-             (clienttime . ,(current-kgstyle-time))
-             (hash . ,hash)
-             (mid . ,*mid*)
-             (dfid . ,*dfid*)
-             (uuid . ,*uuid*))])
-      (cons
-       `(signature . ,(get-signature tmp))
-       tmp)))
+    `((client . "pc")
+      (keyword . ,keyword)
+      (ver . "1")
+      (duration . ,(number->string (* duration 1000)))
+      (hash . ,hash)
+      (man . "no")))
   (define res
     (response-json
-     (get "https://gateway.kugou.com/v1/search"
+     (get "http://lyrics.kugou.com/search"
           #:params params
-          #:headers (request-headers "krcs.kugou.com" "Android9-AndroidPhone-10259-47-0-Lyric-wifi"))))
+          #:headers (request-headers "lyrics.kugou.com"
+                                     "Android9-AndroidPhone-10259-47-0-Lyric-wifi"
+                                     "lyrics.kugou.com"))))
   (if (equal? (hash-ref res 'info #f) "OK")
       (hash-ref res 'candidates)
       '()))
