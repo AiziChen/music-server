@@ -12,7 +12,6 @@ Content-Type: "application/json"
 
 {
   "album-id": "40769583",
-  "id": "280442912",
   "hash": "3FE169AC4EEB69371DFD0A80F6B462EC"
 }
 
@@ -22,7 +21,6 @@ Content-Type: "application/json"
 
 {
   "keyword": "蒋雪璇",
-  "id": "114168899",
   "hash": "5BBD95CB7ADFCE00C95D7BAE056687DD",
   "duration": 181
 }
@@ -32,7 +30,6 @@ POST http://localhost:8787/api/music/get-cover HTTP/1.1
 Content-Type: "application/json"
 
 {
-  "id": "114168899",
   "hash": "81A9D30807DB85C15BD05131E7247DFB"
 }
 
