@@ -15,6 +15,7 @@
 
 (define *tag* "em")
 (define *android-platform* "AndroidFilter")
+(define *web-platform* "WebFilter")
 (define *clientver* "10259")
 (define *pidversion* "3001")
 (define *pidversion-secrect* "57ae12eb6890223e355ccfcb74edf70d")

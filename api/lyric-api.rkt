@@ -28,8 +28,8 @@
  search-lyric
  get-lyric)
 
-(define/contract (search-lyric keyword hash duration album-audio-id)
-  (-> non-empty-string? non-empty-string? integer? non-empty-string?
+(define/contract (search-lyric keyword hash duration)
+  (-> non-empty-string? non-empty-string? integer?
       (listof hash?))
   (define params
     (let ([tmp
@@ -38,7 +38,6 @@
              (ver . "1")
              (duration . ,(number->string duration))
              (lrctxt . "1")
-             (album_audio_id . ,album-audio-id)
              (client . "mobi")
              (clientver . ,*clientver*)
              (man . "no")

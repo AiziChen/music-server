@@ -42,27 +42,20 @@
              (page . ,(number->string page))
              (pagesize . "30")
              (userid . ,*userid*)
-             (clientver . ,*clientver*)
-             (platform . ,*android-platform*)
-             (tag . ,*tag*)
-             (iscorrection . "1")
-             (privilegefilter . "0")
-             (appid . ,*appid*)
+             (clientver . "2.9.5")
+             (platform . ,*web-platform*)
+             (iscorrection . "7")
              (area_code . "1")
-             (clienttime . ,(current-kgstyle-time))
-             (dopicfull . "1")
-             (mid . ,*mid*)
-             (dfid . ,*dfid*)
-             (uuid . ,*uuid*))])
+             (tag . ,*tag*))])
       (cons
        `(signature . ,(get-signature tmp))
        tmp)))
   (define res
     (response-json
-     (get "https://gateway.kugou.com/v2/search/song"
+     (get "http://songsearchretry.kugou.com/song_search_v2"
           #:params params
           #:headers (request-headers))))
-  
+
   (if (= (hash-ref res 'status -1) 1)
       (let ([data (hash-ref res 'data)])
         (hasheq 'status 1 'total (hash-ref data 'total)
@@ -89,13 +82,12 @@
 (define *song-result-filter*
   (list->set '(bitRate extName fileSize timeLength url)))
 (define/contract (get-song album-id
-                           album-audio-id
                            hash
                            key
                            [vip-type "0"]
                            [cmd "26"]
                            [behavior "play"])
-  (->* (string? string? non-empty-string? non-empty-string?)
+  (->* (string? non-empty-string? non-empty-string?)
        (non-empty-string? non-empty-string? non-empty-string?)
        hash?)
   (define params
@@ -110,7 +102,6 @@
       (ptype . "0")
       (token . ,*token*)
       (mtype . "1")
-      (album_audio_id . ,album-audio-id)
       (behavior . ,behavior)
       (pid . "2")
       (cmd . ,cmd)
@@ -156,13 +147,13 @@
                              *userid*))))
 
       ;; get song
-      (get-song album-id album-audio-id sq-hash key)
+      (get-song album-id sq-hash key)
 
       ;; get cover
       (get-cover album-id sq-hash)
 
       ;; get lyric
-      (define candidates (search-lyric keyword sq-hash duration album-audio-id))
+      (define candidates (search-lyric keyword sq-hash duration))
       (when (> (length candidates) 0)
         (let* ([candidate (car candidates)]
                [id (hash-ref candidate 'id)]
