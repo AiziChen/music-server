@@ -18,6 +18,7 @@
 (require koyo/json
          json
          web-server/http/request-structs
+         racket/string
          (prefix-in api: "api/music-api.rkt")
          (prefix-in api: "api/lyric-api.rkt")
          (prefix-in api: "api/cover-api.rkt")

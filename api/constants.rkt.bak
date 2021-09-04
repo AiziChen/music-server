@@ -1,8 +1,5 @@
 #lang racket/base
 
-(require racket/port
-         racket/contract)
-
 (provide (all-defined-out))
 
 (define *appid* "")
