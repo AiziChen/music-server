@@ -93,26 +93,28 @@
   (define params
     `((album_id . ,album-id)
       (userid . ,*userid*)
-      (authType . "1")
+      (area_code . "1")
       (hash . ,hash)
       (module . "")
-      (appid . "1155")
-      (version . "2.9.5")
+      (appid . ,*appid*)
+      (version . ,*clientver*)
       (vipType . ,vip-type)
+      (ptype . "0")
       (token . ,*token*)
+      (mtype . "1")
       (behavior . ,behavior)
-      (pid . "4")
+      (pid . "2")
       (cmd . ,cmd)
       (mid . ,*mid*)
-      (key . ,key)))
+      (dfid . ,*dfid*)
+      (pidversion . ,*pidversion*)
+      (key . ,key)
+      (with_res_tag . "0")))
   (define res
     (response-json
-     (get "http://trackercdn.kugou.com/i/v2/"
+     (get "https://gateway.kugou.com/i/v2/"
           #:params params
-          #:headers (request-headers "trackercdn.kugou.com"
-                                     "Android9-AndroidPhone-10259-47-0-NetMusic-wifi"
-                                     "trackercdn.kugou.com"))))
-  (displayln res)
+          #:headers (request-headers "tracker.kugou.com" "Android9-AndroidPhone-10259-47-0-NetMusic-wifi"))))
   (if (= (hash-ref res 'status -1) 1)
       (hash-filter res
                    (lambda (k _)
@@ -150,7 +152,7 @@
       (get-song album-id sq-hash key)
 
       ;; get cover
-      (get-cover album-id sq-hash)
+      (get-cover sq-hash)
 
       ;; get lyric
       (define candidates (search-lyric keyword sq-hash duration))
