@@ -93,28 +93,26 @@
   (define params
     `((album_id . ,album-id)
       (userid . ,*userid*)
-      (area_code . "1")
+      (authType . "1")
       (hash . ,hash)
       (module . "")
-      (appid . ,*appid*)
-      (version . ,*clientver*)
+      (appid . "1155")
+      (version . "2.9.5")
       (vipType . ,vip-type)
-      (ptype . "0")
       (token . ,*token*)
-      (mtype . "1")
       (behavior . ,behavior)
-      (pid . "2")
+      (pid . "4")
       (cmd . ,cmd)
       (mid . ,*mid*)
-      (dfid . ,*dfid*)
-      (pidversion . ,*pidversion*)
-      (key . ,key)
-      (with_res_tag . "0")))
+      (key . ,key)))
   (define res
     (response-json
-     (get "https://gateway.kugou.com/i/v2/"
+     (get "http://trackercdn.kugou.com/i/v2/"
           #:params params
-          #:headers (request-headers "tracker.kugou.com" "Android9-AndroidPhone-10259-47-0-NetMusic-wifi"))))
+          #:headers (request-headers "trackercdn.kugou.com"
+                                     "Android9-AndroidPhone-10259-47-0-NetMusic-wifi"
+                                     "trackercdn.kugou.com"))))
+  (displayln res)
   (if (= (hash-ref res 'status -1) 1)
       (hash-filter res
                    (lambda (k _)
@@ -141,8 +139,10 @@
       (define key
         (bytes->string/locale
          (md5 (string-append sq-hash
-                             *pidversion-secrect*
-                             *appid*
+                             ;;*pidversion-secrect*
+                             "kgcloudv2"
+                             ;;*appid*
+                             "1155"
                              *mid*
                              *userid*))))
 

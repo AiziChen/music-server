@@ -24,8 +24,8 @@
 (provide
  get-cover)
 
-(define/contract (get-cover album-audio-id hash)
-  (-> non-empty-string? non-empty-string? (or/c non-empty-string? #f))
+(define/contract (get-cover hash)
+  (-> non-empty-string? (or/c non-empty-string? #f))
   (define params
     `((r . "play/getdata")
       (callback . "")
@@ -34,7 +34,6 @@
       (appid . "1014")
       (platid . "4")
       (mid . ,*mid*)
-      (album_id . ,album-audio-id)
       (_ . ,(current-kgstyle-time))))
   (define res
     (response-json
