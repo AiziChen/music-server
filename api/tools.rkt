@@ -51,7 +51,7 @@
 (define (generate-key hash)
   (bytes->string/locale
    (md5 (string-append hash
-                       *pidversion-secrect*
+                       "kgcloudv2"
                        *appid*
                        *mid*
                        *userid*))))

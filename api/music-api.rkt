@@ -42,7 +42,7 @@
              (page . ,(number->string page))
              (pagesize . "30")
              (userid . ,*userid*)
-             (clientver . "2.9.5")
+             (clientver . ,*clientver*)
              (platform . ,*web-platform*)
              (iscorrection . "7")
              (area_code . "1")
@@ -61,21 +61,13 @@
         (hasheq 'status 1 'total (hash-ref data 'total)
                 'list
                 (for/list ([item (hash-ref (hash-ref res 'data) 'lists)])
-                  (define singer-name
-                    (string-replace
-                     (string-replace (hash-ref item 'SingerName) "<em>" "")
-                     "</em>" ""))
-                  (define song-name
-                    (string-replace
-                     (string-replace (hash-ref item 'SongName) "<em>" "")
-                     "</em>" ""))
                   (hash-set
                    (hash-set
                     (hash-filter item
                                  (lambda (k _)
                                    (set-member? *music-result-filter* k)))
-                    'SingerName singer-name)
-                   'SongName song-name))))
+                    'SingerName (hash-ref item 'SingerName))
+                   'SongName (hash-ref item 'SongName)))))
       (hasheq 'status -1 'msg "internal error, please try again")))
 
 
@@ -93,28 +85,26 @@
   (define params
     `((album_id . ,album-id)
       (userid . ,*userid*)
-      (area_code . "1")
+      (authType . "1")
       (hash . ,hash)
       (module . "")
       (appid . ,*appid*)
       (version . ,*clientver*)
       (vipType . ,vip-type)
-      (ptype . "0")
       (token . ,*token*)
-      (mtype . "1")
       (behavior . ,behavior)
-      (pid . "2")
+      (pid . "4")
       (cmd . ,cmd)
       (mid . ,*mid*)
-      (dfid . ,*dfid*)
-      (pidversion . ,*pidversion*)
-      (key . ,key)
-      (with_res_tag . "0")))
+      (key . ,key)))
   (define res
     (response-json
-     (get "https://gateway.kugou.com/i/v2/"
+     (get "http://trackercdn.kugou.com/i/v2/"
           #:params params
-          #:headers (request-headers "tracker.kugou.com" "Android9-AndroidPhone-10259-47-0-NetMusic-wifi"))))
+          #:headers (request-headers "trackercdn.kugou.com"
+                                     "%E9%85%B7%E7%8B%97%E9%9F%B3%E4%B9%90/1104 CFNetwork/1240.0.4 Darwin/20.6.0"
+                                     "trackercdn.kugou.com"))))
+  (displayln res)
   (if (= (hash-ref res 'status -1) 1)
       (hash-filter res
                    (lambda (k _)
@@ -135,21 +125,19 @@
       (define album-id (hash-ref 1st-song 'AlbumID))
       (define album-audio-id (hash-ref 1st-song 'ID))
       (define duration (hash-ref 1st-song 'Duration))
-      (define nq-hash (string-downcase (hash-ref 1st-song 'FileHash)))
-      (define hq-hash (string-downcase (hash-ref 1st-song 'HQFileHash)))
-      (define sq-hash (string-downcase (hash-ref 1st-song 'SQFileHash)))
+      (define nq-hash (hash-ref 1st-song 'FileHash))
+      (define hq-hash (hash-ref 1st-song 'HQFileHash))
+      (define sq-hash (hash-ref 1st-song 'SQFileHash))
       (define key
         (bytes->string/locale
-         (md5 (string-append sq-hash
-                             ;;*pidversion-secrect*
+         (md5 (string-append hq-hash
                              "kgcloudv2"
-                             ;;*appid*
-                             "1155"
+                             *appid*
                              *mid*
                              *userid*))))
 
       ;; get song
-      (get-song album-id sq-hash key)
+      (get-song album-id hq-hash key)
 
       ;; get cover
       (get-cover sq-hash)
