@@ -33,8 +33,8 @@ if the server is on, it will result `"server is running."` on the terminal.
 
 ```shell
 # create binary file
-racket exe server.rkt
+raco exe server.rkt
 # distribute it
-racket distribute bin-dir server
+raco distribute bin-dir server
 ```
 
